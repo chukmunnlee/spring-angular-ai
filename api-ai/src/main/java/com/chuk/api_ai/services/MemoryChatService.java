@@ -2,7 +2,7 @@ package com.chuk.api_ai.services;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
@@ -18,6 +18,8 @@ import com.chuk.api_ai.models.MemoryChatPrompt;
 
 @Service
 public class MemoryChatService {
+
+  private static final String GENERATE_CHAT_DESCRIPTION = "Generate a chate description based on the message, limiting the description to 30 characters:";
 
   @Autowired
   private ChatClient.Builder builder;
@@ -38,13 +40,16 @@ public class MemoryChatService {
 
     ChatMemory memory = MessageWindowChatMemory.builder()
         .chatMemoryRepository(chatMemoryRepo)
-        .maxMessages(100)
+        .maxMessages(10)
         .build();
 
 
     chatClient = builder
       // Add chat memory to the chat client
-      .defaultAdvisors(MessageChatMemoryAdvisor.builder(memory).build())
+      .defaultAdvisors(
+          MessageChatMemoryAdvisor.builder(memory).build(),
+          new SimpleLoggerAdvisor()
+      )
       .build();
   }
 
