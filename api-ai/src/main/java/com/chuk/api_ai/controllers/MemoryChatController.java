@@ -10,25 +10,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.json.Json;
 
-import com.chuk.api_ai.models.ChatPrompt;
-import com.chuk.api_ai.services.ChatService;
+import com.chuk.api_ai.services.MemoryChatService;
+
+import com.chuk.api_ai.models.MemoryChatPrompt;
 
 @RestController
-@RequestMapping("/api")
-public class ChatController {
+@RequestMapping("/api/memory")
+public class MemoryChatController {
 
   @Autowired
-  private ChatService chatService;
+  private MemoryChatService chatSvc;
 
-  @PostMapping(path = "/chat", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<String> generation(@RequestBody ChatPrompt prompt) {
-
-    System.out.println(">>> Prompt: %s".formatted(prompt));
-    var response = chatService.sendToLLM(prompt.prompt());
-
+  @PostMapping(path="/chat", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<String> generation(@RequestBody MemoryChatPrompt prompt) {
+    var response = this.chatSvc.sendToLLM(prompt);
     return ResponseEntity.ok(
         Json.createObjectBuilder()
           .add("response", response)
-          .build().toString());
+          .build().toString()
+    );
   }
 }
+
+
