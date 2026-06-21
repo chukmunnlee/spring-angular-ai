@@ -29,7 +29,7 @@ export class SimpleChat {
   @ViewChild('#chatHistory')
   private chatHistory!: ElementRef;
 
-  private chatSvc: ChatService = inject(ChatService)
+  protected chatSvc: ChatService = inject(ChatService)
 
   protected isLoading = false
   private isLocal = false
